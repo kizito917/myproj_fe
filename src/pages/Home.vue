@@ -2,16 +2,22 @@
   <div class="container">
     <h4 class="text-center mt-2">Welcome Back...Login!!!</h4>
     <div>
+      <div class="alert alert-success" v-if="isSuccess">
+        Login successful
+      </div>
+      <div class="alert alert-danger" v-if="isError">
+        Error in logging in
+      </div>
       <div class="form-group mb-4">
-        <label for="username">Username</label>
-        <input type="text" class="form-control" placeholder="Enter Email" />
+        <label for="username">Email</label>
+        <input type="email" v-model="email" class="form-control" placeholder="Enter Email" />
       </div>
       <div class="form-group mb-4">
         <label for="username">Password</label>
-        <input type="password" class="form-control" placeholder="Enter Password" />
+        <input type="password" v-model="password" class="form-control" placeholder="Enter Password" />
       </div>
       <div>
-        <button class="btn btn-success">Login</button>
+        <button class="btn btn-success" @click.prevent="login">Login</button>
       </div>
       <div>
         <p>Don't have an account? <router-link to="/register">Register an account</router-link>
@@ -22,9 +28,29 @@
 </template>
 
 <script>
-export default {
-  name: 'Home'
-}
+import { defineComponent, ref } from 'vue'
+//import { storeToRefs } from 'pinia';
+import { useAuthStore } from '../store/auth';
+
+export default defineComponent({
+  setup() {
+    const authStore = useAuthStore();
+    const email = ref('');
+    const password = ref('');
+    // const { isSuccess, isError } = storeToRefs(authStore);
+
+    function login () {
+      authStore.processLogin(email.value, password.value)
+    }
+
+    return {
+      authStore,
+      email,
+      password,
+      login
+    }
+  },
+})
 </script>
 
 <style scoped>
