@@ -4,26 +4,26 @@
     <div>
       <div class="form-group mb-4">
         <label for="username">First name</label>
-        <input type="text" class="form-control" placeholder="Enter First name" />
+        <input type="text" class="form-control" v-model="first_name" placeholder="Enter First name" />
       </div>
       <div class="form-group mb-4">
         <label for="username">Last name</label>
-        <input type="text" class="form-control" placeholder="Enter Last name" />
+        <input type="text" class="form-control" v-model="last_name" placeholder="Enter Last name" />
       </div>
       <div class="form-group mb-4">
         <label for="username">Email</label>
-        <input type="email" class="form-control" placeholder="Enter Email" />
+        <input type="email" class="form-control" v-model="email" placeholder="Enter Email" />
       </div>
       <div class="form-group mb-4">
         <label for="username">Username</label>
-        <input type="text" class="form-control" placeholder="Enter Username" />
+        <input type="text" class="form-control" v-model="username" placeholder="Enter Username" />
       </div>
       <div class="form-group mb-4">
         <label for="username">Password</label>
-        <input type="password" class="form-control" placeholder="Enter Username" />
+        <input type="password" class="form-control" v-model="password" placeholder="Enter Username" />
       </div>
       <div>
-        <button class="btn btn-success">Register Account</button>
+        <button class="btn btn-success" @click.prevent="register">Register Account</button>
       </div>
       <div>
         <p>Already have an account? <router-link to="/">Login</router-link>
@@ -34,7 +34,34 @@
 </template>
 
 <script>
-export default {
-  
-}
+import { defineComponent, ref } from 'vue'
+import { useAuthStore } from '../store/auth';
+
+export default defineComponent({
+  setup() {
+    const authStore = useAuthStore();
+    const first_name = ref('');
+    const last_name = ref('');
+    const username = ref('');
+    const email = ref('');
+    const password = ref('');
+
+    function register () {
+      var payload = {
+        first_name, last_name, username, email, password
+      }
+      authStore.processRegister(payload)
+    }
+
+    return {
+      authStore,
+      first_name,
+      last_name,
+      username,
+      email,
+      password,
+      register
+    }
+  },
+})
 </script>
